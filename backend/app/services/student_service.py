@@ -47,14 +47,20 @@ def get_student_by_id(db:Session, student_id:int):
     return studentBy_id
 
 
-def update_student_by_id(db.Session, student_id:int):
+def update_student_by_id(db:Session, student_id:int):
 
     student = (db.query(Student).filter(Student.student_id == student_id).first())
     if not student:
         raise HTTPException(
             status_code = 404,
-            detail = "studnet not found"
+            detail = "Student not found"
         )
+    
+    student.name = name
+    student.email = email
+    db.commit()
+    db.refresh(student)
+    return student
 
 def delete_student_by_id(db:Session, student_id:int):
 
@@ -67,7 +73,6 @@ def delete_student_by_id(db:Session, student_id:int):
             )
         db.delete(student)
         db.commit()
-       
-        return {"message":student}
+        return {"message": "Student deleted successfully"}
 
             
