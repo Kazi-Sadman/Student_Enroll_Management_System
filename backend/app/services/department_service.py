@@ -6,15 +6,26 @@ from app.schemas.department import DepartmentCreate
 def get_department_or_404(db: Session, department_id:int)-> Department:
     department = db.query(Department).filter(Department.department_id == department_id).first()
 
+    # if deparment id is not exist then we do not updata  by id,delete  data by id, get data by id  then show this HTTPExctrion error
     if not department:
         raise HTTPException(
             status_code= status.HTTP_404_NOT_FOUND,
-            detail = detail="Department not found"
+            detail="Department not found"
         )
     return department
 
 def create_department(db:Session, department_data: DepartmentCreate):
 
+    # at fisrt we need to check is the department exist
+    existing_dept = db.query(Department).filter(Department.name == department_data.name).first()
+    
+    #if exist then through error
+    if existing_dept:
+       
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Department with this name already exists"
+        )
     new_dept = Department(name = department_data.name)
     db.add(new_dept)
     db.commit()

@@ -1,4 +1,6 @@
+
 from sqlalchemy import Column, Integer, String, ForeignKey
+# we use this for foreign key
 from sqlalchemy.orm import relationship
 from app.database import Base
 
@@ -10,4 +12,3 @@ class Student(Base):
     email = Column(String, unique =True, nullable=True)
     department_id = Column(Integer, ForeignKey("departments.department_id"))
 
-    department = relationship("Department")
